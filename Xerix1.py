@@ -12,25 +12,32 @@ import pyfiglet
 import requests
 import pyperclip
 import cryptography
+import socketserver
 from faker import Faker
-from datetime import datetime
+from datetime import date
+#from zipfile import Zipfile
 from datetime import datetime
 from cryptography.fernet import Fernet
 
+#Introduction to Xerix program
 def intro():
-      ascii_banner = pyfiglet.figlet_format("XeriX")
+      ascii_banner = pyfiglet.figlet_format("XERIX")
       print(ascii_banner)
       print("Created by:CYBER ELITE NETWORK™")
       print ("C <----- You must create an account first To do so press C")
       print ("L <----- To login")
       print("-" *100)
-    
-class Hashes:    
-    
+
+# Text conversion to hash  
+class Hashes:
+
+    def __init__(self):
+        pass
+
     def md5_str(self):
-            '''it takes a string and converts it to a md5  hash'''
+            '''it takes a string and converts it to a md5 hash'''
+            a_string = input("Enter text to be hashed:")
             st = time.process_time()
-            a_string = input('Enter text to be hashed:')
             hashed_string = hashlib.md5(a_string.encode('utf-8')).hexdigest()
             print(hashed_string)
             clip_board = pyperclip.copy(hashed_string)
@@ -42,7 +49,7 @@ class Hashes:
     def Sha256_str(self):
             '''it takes a string and converts it to sha256 hash'''
             st = time.process_time()
-            b_string = input ('Enter text to be hashed:')
+            b_string = input("Enter text to be hashed:")
             hashed_string = hashlib.sha256(b_string.encode('utf-8')).hexdigest()
             print (hashed_string)
             clip_board = pyperclip.copy(hashed_string)
@@ -52,9 +59,9 @@ class Hashes:
             print("-"*50)
             
     def Sha512_str(self):
-          '''it takes a string and coverts it to sha512  hash'''
+          '''it takes a string and coverts it to sha512 hash'''
+          c_string = input("Enter text to be hashed:")
           st = time.process_time()  
-          c_string = input ('Enter text to be hashed:')
           hashed_string = hashlib.sha512(c_string.encode('utf-8')). hexdigest ()
           print (hashed_string)
           clip_board = pyperclip.copy(hashed_string)
@@ -62,7 +69,8 @@ class Hashes:
           ep = et - st
           print("Execution time:",ep,"sec") 
           print("-"*50)
-          
+
+#Encrypting strings 
 def str_enc():
      '''it encrypts a string using fernet and it also decrypts the string'''
      st = time.process_time()         
@@ -71,16 +79,14 @@ def str_enc():
           
 # encryption
           if text == ("encrypt"):
-               key =bytes( input("Enter key:"),"utf-8")
+               key =bytes(input("Enter key:"),"utf-8")
                fernet = Fernet(key)
                Text = input("Enter text:")
                x = bytes(Text,'utf-8')
                x = fernet.encrypt(x)
                print(x)
                break
-
 #decryption
- 
           elif text == "decrypt":
 
               encText = input("Enter encrypted text:")
@@ -96,6 +102,7 @@ def str_enc():
      print("Execution time:",ep,"sec")
      print("-" *50)
 
+#The class that has operating system commands
 class Ops:
   
     def pwd(self):
@@ -107,7 +114,7 @@ class Ops:
          print("Execution time:",ep,"secs")
          print('-'*50)
          
-    def cls(self):
+    def clear(self):
          '''it clears the screen'''
          os.system('cls')
          
@@ -126,10 +133,10 @@ class Ops:
 
     def shutdown(self):
         ''' shutdowns your computer '''
-        os.system("shutdown /r")
+        os.system("shutdown /s")
 
-    def shutabort(self):
-        '''Aborts the shutdown '''
+    def shutab(self):
+        '''aborts the shutdown command '''
         os.system("shutdown /a")
           
     def mkdir(self):
@@ -167,8 +174,8 @@ class Ops:
            print("Execution time:",ep,"secs")
            print("-"*50)
 
-    def file_info(self):
-            ''' gives an information of a particular file in the working directory'''
+    def meta_info(self):
+            ''' gives meta information about a file'''
             st = time.process_time()   
             file_info  = input ("Enter file name and extension:")
             print (os.stat(file_info))
@@ -189,8 +196,11 @@ class Ops:
              print ("Execution time:",ep,"secs")
              print("-"*50)
 
-# request section
+# The Web section
 class web:
+
+    def __init__(self):
+        pass
     
     def html_request(self):
           ''' shows the html code of a website'''
@@ -231,6 +241,9 @@ class web:
 
 class Enc:
 
+      def __init__(self):
+        pass
+
       def enc_file_key(self):
             ''' this is used to encrypt a file in symmetric key cryptography using the fernet encryption algrorithms'''
             st = time.process_time()
@@ -245,19 +258,19 @@ class Enc:
             print("Execution time:",ep,"secs")
             print("-"*50) 
       
-def dec_file_key():
-    ''' this is used to decrypt a file that has been encrypted with symmetric key cryptography '''
-    try:
-      st = time.process_time()
-      import Decryptor
-      et = time.process_time()
-      ep = et - st
-      print("Execution time:",ep,"secs")
-    except:
-      print("Enter a valid file")
+      def dec_file_key():
+          ''' This is used to decrypt a file that has been encrypted with symmetric key cryptography '''
+          try:
+              st = time.process_time()
+              import Decryptor
+              et = time.process_time()
+              ep = et - st
+              print("Execution time:",ep,"secs")
+          except:
+             print("Enter a valid file")
  
 def pass_Gen():                 
-  '''this is a password genrator'''
+  ''' This is a password genrator'''
   # Choose a random selection of characters from the set of lowercase letters, uppercase letters, and digits
   y = string.ascii_lowercase + string.ascii_uppercase + string.digits 
   pas = input("Enter length:")
@@ -277,6 +290,9 @@ def pass_Gen():
        print("Enter an option")
 
 class Net:
+
+    def __init__(self):
+        pass
    
     def ip_private(self):
       '''shows you your private ip address'''
@@ -335,11 +351,10 @@ class Net:
         print("Execution time:",ep,"secs")
         print("-"*50)
 
-    def ip_track(self):
+    def ip_track(ip):
           ''' tracks the ip address by providing the infotmation of the country where the ip address is located and many more'''
           st = time.process_time()
           try:
-              ip = input('Enter ip address:')
               location = ipapi.location(ip)
               print("country:",location['country_name'])
               print("contry capital:",location['country_capital'])
@@ -354,6 +369,123 @@ class Net:
           ep = et - st
           print("Execution time:",ep,"secs")
           print("-"*50)
+    
+    def ps( self,start_port,end_port,target):
+        ''' Scans for open ports of a network ip address '''
+        print(f"Scanning ports {start_port} to {end_port} on {target}...")
+        for port in range(start_port, end_port + 1):
+             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+             sock.settimeout(0.5)
+             result = sock.connect_ex((target, port))
+             if result == 0:
+                 print(f"Port {port} is open")
+             sock.close()
+
+
+    def lanc_host(self):
+        ''' Creates a chat server within a LAN '''
+        # create a socket object
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # get the hostname of this machine
+        host = socket.gethostname()
+
+        # specify the port to use
+        port = 12345
+
+        # bind the socket to a specific address and port
+        server.bind((host, port))
+
+        # set the server to listen for incoming connections
+        server.listen(5)
+
+        print(f"Server listening on {host}:{port}...")
+
+         # loop to handle multiple client connections
+        while True:
+           # wait for a client to connect
+           client, address = server.accept()
+           print(f"Received connection from {address}")
+    
+           # send a welcome message to the client
+           client.send("Welcome to the server!".encode())
+    
+           # loop to handle messages from the client
+           while True:
+                # receive a message from the client
+                data = client.recv(1024).decode()
+        
+           # if the client closes the connection, break out of the loop
+           if not data:
+              break
+        
+           print(f"Received message from {address}: {data}")
+        
+           # send a response back to the client
+           response = f"You sent: {data}"
+           client.send(response.encode())
+    
+         # close the connection with the client
+           client.close()
+           print(f"Connection with {address} closed")
+
+ 
+
+    def lanc_clt(self):
+        '''Connecting to a server created by another Xerix commander or created by you'''
+        try:
+        # create a socket object
+           client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        # get server hostname
+           host = socket.gethostname()
+
+        # specify port to use
+           port = 12345
+
+        # connect to the server
+           client.connect((host, port))
+
+        # receive the welcome message from the server
+           data = client.recv(1024).decode()
+           print(data)
+
+       # loop to send multiple messages to the server
+           while True:
+           # prompt the user for input
+              message = input("Enter a message to send to the server (or type 'quit' to exit): ")
+    
+           # if the user enters 'quit', break out of the loop
+              if message.lower() == 'quit':
+                 break
+    
+        # send the message to the server
+           client.send(message.encode())
+    
+        # receive the server's response
+           response = client.recv(1024).decode()
+           print(f"Response from server: {response}")
+
+        # close the connection
+           client.close()
+        except ConnectionRefusedError:
+            print("No connection try again!")
+
+    def Net_Sender():
+        ''' Allows you to send a file while being the host'''
+
+        host = gethostbyname(gethostname())
+        clients = socket.socket(AF_INET,socket.SOCK_STREAM)
+
+        clients.connect((host,1234))
+        file_input = input("Enter the file:")
+        file = open(file_input,"rb")
+        file_size = os.path.getsize(file)
+        print(f"The size of the file is {file_size}")
+        
+    def Nets_Cli():
+        ''' Allows you to recieve a file incomming from the host over a LAN'''
+        
          
 def sym_gen_key():
       '''' generates a 32 bit key for symmetric key encryption'''
@@ -368,6 +500,11 @@ def sym_gen_key():
       ep = et - st
       print("Execution time:",ep,"secs")
       print('-'*50)
+    
+def EXIF_Scraper():
+    ''' This tool scrapes the meta data (EXIF) of an image or a picture'''
+    st = time.process()
+
       
 def To_date():
   '''
@@ -382,6 +519,9 @@ def timer():
 
 
 class SocialEng:
+
+    def __init__(self):
+        pass
     
     def fake_name(self):
       '''this generates random fake names'''
@@ -399,6 +539,9 @@ class SocialEng:
 
 class Cracker:
 
+    def __init__(self):
+        pass
+
     def zip_cracker():
         pass
 
@@ -413,14 +556,14 @@ intro()
 def commands():
     while True:
          cmd = input (">>> ")
-         if cmd == 'md5_str':
+         if cmd.startswith('md5_str'):
             Hash1 = Hashes()
             Hash1.md5_str()
-         elif cmd == 'sha256_str':
+         elif cmd.startswith('sha256_str'):
             Hash1 = Hashes()
             Hash1.Sha256_str()
-         elif cmd == 'sha512_str':
-             Hash1 = Hashes() 
+         elif cmd.startswith("sha512_str"):
+             Hash1 = Hashes()
              Hash1.Sha512_str()
          elif cmd == 'pwd':
               Op1 = Ops()
@@ -435,17 +578,21 @@ def commands():
               Op1 = Ops ()
               Op1.ls()
          elif cmd == 'rmdir':
+              Op1 = Ops()
               Op1.rmdir()
-         elif cmd == "file_info":
-             Op1.file_info()
+         elif cmd == "meta_info":
+             Op1.meta_info()
          elif cmd == "file_date":
               Op1.file_date()
          elif cmd == "shutdown":
               Op1 = Ops()
               Op1.shutdown()
          elif cmd == "shutdown -a":
-            Op1 = ops
-            Op1.shutabort()
+            Op1 = Ops()
+            Op1.shutab()
+         elif cmd == "cls" or cmd == "clear":
+            Op1 = Ops()
+            Op1.clear()
          elif cmd == "html_request":
            web1 = web()
            web1.html_request()
@@ -479,6 +626,15 @@ def commands():
          elif cmd == "ip/track":
             Net1 = Net()
             Net1.ip_track()
+         elif cmd == "ps":
+            Net1 = Net()
+            pass
+         elif cmd =="chat -h":
+            Net1 = Net()
+            Net1.lanc_host()
+         elif cmd == "chat -c":
+            Net1 = Net()
+            Net1.lanc_clt()
          elif cmd == "file_dec":
             dec_file_key()
          elif cmd == "sym key":
@@ -487,11 +643,13 @@ def commands():
                To_date()
          elif cmd == "time":
              timer()
-         elif cmd == "cls":
-             Op1.cls()
          elif cmd == "fake_name":
             SoE = SocialEng()
             SoE.fake_name()
+         elif cmd == "help(chat -c)":
+            print(Net1.lanc_clt.__doc__)
+         elif cmd == "help(chat -h)":
+            print(Net1.lanc_host.__doc__)
          elif cmd == 'help(fake_name)':
               print(SoE.fake_name.__doc__)
          elif cmd == "help(date)":
@@ -522,11 +680,14 @@ def commands():
          elif cmd == "help(rmdir)":
                Op1 = Ops
                print(Op1.rmdir.__doc__)
-         elif cmd == "help(file_info)":
+         elif cmd == "help(meta_info)":
                 Op1 = Ops
-                print(Op1.file_info.__doc__)
+                print(Op1.meta_info.__doc__)
          elif cmd == "help(shutdown)":
                Op1 = Ops
+         elif cmd == "help(shutdown -a)":
+            Op1 = Ops
+            print(Op1.shutab.__doc__)
          elif cmd == "help(file_date)":
                 Op1 = Ops
                 print(Op1.file_date.__doc__)
@@ -539,7 +700,7 @@ def commands():
          elif cmd == "help(str enc)":
                 print(str_enc.__doc__)
          elif cmd == "help(enc file)":
-               print(Enc1.enc_file_key.__doc__)
+                print(Enc1.enc_file_key.__doc__)
          elif cmd == "help(dom av)":
                 print(web1.domain.__doc__)
          elif cmd == "help(ip/private)":
@@ -555,22 +716,21 @@ def commands():
          elif cmd == "help(sym key)":
                 print(sym_gen_key.__doc__)
          elif cmd == 'help(cls)':
-                 print(Op1.cls.__doc__)  
-         elif cmd == "help(shutdown_abort)":
-            print(shutabort.__doc__)
+                 print(Op1.cls.__doc__)
+         elif cmd == "banner" or cmd == "BANNER" or cmd == "Banner":
+            intro()  
          elif cmd == "":
            continue                 
          elif cmd == "exit":
             print ("Version 2.5")
             print ("Created by CYBER ELITE NETWORK ™")
-            exit
-            break
+            exit()
          else:
              continue
 
 #Security Features (Authentication)
 while True:
-    cmd2 = input(">>>")
+    cmd2 = input(">>> ")
     if cmd2 == 'l' or cmd2 == "L":
         Log_usn = input("Enter name:")
         Log_pass = getpass.getpass(prompt="Enter your password:")
@@ -582,6 +742,7 @@ while True:
             if Log_hash != f.read():
                 print('login error')
             else:
+                print(f"Welcome back commander {Log_usn}")
                 commands()    
     elif cmd2 == "c" or cmd2 == "C":
         Reg_usn = input("Enter name:")
@@ -591,6 +752,7 @@ while True:
         Reg_hash = hashlib.md5(Reg_pass.encode('utf-8')).hexdigest()
 
         with open("Log.txt", "w") as f:
-            f.write(Reg_hash)
+               f.write(Reg_hash)
     else:
          print("Enter an option")    
+        
