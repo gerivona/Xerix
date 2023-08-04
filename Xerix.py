@@ -3,6 +3,7 @@ import sys
 import time
 import whois
 import ipapi
+import json
 import socket
 import random
 import getpass
@@ -35,10 +36,8 @@ def intro():
 class Hashes:
     
     def __init__(self):
-        self.a = input("Enter text to be hashed:")
-        self.st = time.process_time()
-        self.et = time.process_time()
-        
+        pass
+       
 
     def md5_str(self):
         '''it takes a string and converts it to a md5 hash'''
@@ -81,7 +80,7 @@ def str_enc():
     '''it encrypts a string using fernet and it also decrypts the string'''
     st = time.process_time()         
     while True:
-        text = input ("Enter an option:")
+        text = input ("Enter an option:").strip()
           
 # encryption
         if text == ("encrypt"):
@@ -95,7 +94,7 @@ def str_enc():
 #decryption
         elif text == "decrypt":
 
-            encText = input("Enter encrypted text:")
+            encText = input("Enter encrypted text:").strip()
             key = input("Enter key:")
             f = Fernet(key)
             c = f.decrypt(bytes(encText, 'utf-8'))
@@ -111,7 +110,7 @@ def str_enc():
 #The class that has operating system commands
 class Ops:
 
-    def __init__(self,name):
+    def __init__(self):
         pass
   
     def pwd(self):
@@ -137,7 +136,7 @@ class Ops:
             print("Enter a valid path")
         et = time.process_time()
         ep = et - st
-        print("Execution time:",ep,"secs")
+        print(f"Execution time:{ep}secs")
         print("-"*50)
 
     def shutdown(self):
@@ -157,7 +156,7 @@ class Ops:
         print ('folder created successfully')
         et = time.process_time()
         ep = et - st
-        print("Execution time:",ep,"secs")
+        print(f"Execution time:{ep}secs")
         print("-"*50)
 
     def ls(self):
@@ -168,18 +167,26 @@ class Ops:
         ep = et - st
         print("Execution time:",ep,"secs")
         print("-"*50)
-             
-              
+
+
+    def tre(self):
+        ''' show of the directory and files '''
+        st = time.process_time()
+        os.system('tree')
+        et = time.process_time()
+        ep = st - et
+        print(f"Execution time {ep} secs")
+
     def rmdir (self):
         ''' remove the current directory'''
-        st = time.process_time()
+        st = time.time()
         rmip = input ("Enter folder:")
         try:
            os.rmdir(rmip)
         except:
             print("Enter a valid folder")
-        et = time.process_time()
-        ep = et - st
+        et = time.time()
+        ep = st - et
         print("Execution time:",ep,"secs")
         print("-"*50)
 
@@ -355,7 +362,7 @@ class Net:
            print("Unable to find ip address")
         et = time.process_time()
         ep = et - st
-        print("Execution time:",ep,"secs")
+        print(f"Execution time:{ep}secs")
         print("-"*50)
 
     def ip_track(ip):
@@ -379,14 +386,17 @@ class Net:
                    
     def ps(self,start_port,end_port,target):
         ''' Scans for open ports of a network ip address '''
-        print(f"Scanning ports {start_port} to {end_port} on {target}...")
-        for port in range(start_port, end_port + 1):
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(0.5)
-            result = sock.connect_ex((target, port))
-            if result == 0:
-                print(f"Port {port} is open")
-            sock.close()
+        try:
+            print(f"Scanning ports {start_port} to {end_port} on {target}...")
+            for port in range(start_port, end_port + 1):
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(0.5)
+                result = sock.connect_ex((target, port))
+                if result == 0:
+                    print(f"Port {port} is open")
+                sock.close()
+        except TypeError:
+            print("Still working on it")
     
     def lanc_host(self):
         ''' Creates a chat server within a LAN '''
@@ -517,7 +527,7 @@ def sym_gen_key():
     pyperclip.copy(str_key)
     et = time.process_time()
     ep = et - st
-    print("Execution time:",ep,"secs")
+    print(f"Execution time:{ep}secs")
     print('-'*50)
       
 def To_date():
@@ -549,18 +559,33 @@ class SocialEng:
         print('Enter a valid Number')
       et = time.process_time()
       ep = et - st
-      print('Execution time:',ep,'secs')
+      print(f'Execution time:{ep}secs')
       print(50 * "_")
-      
+
+    def exif(self):
+        ''' This actually strips exif information from an image written by David Bombal '''
+        st = time.process_time()
+        import Exif
+        et = time.process_time()
+        ep = et = st
+        print(f"Execution time:{ep}secs")
+
+    def temp_mail(self):
+        ''' This is a temporay mail that use temp mail website'''
+        st = time.process_time()
+        r = requests.get('temp-mail.org')
+        print(r.status_code)
+
+    
 class Cracker:
 
-    def __init__(self):
-        pass
+    def __init__(self,name):
+        self.name = "This is just the part of python class"
 
-    def zip_cracker():
+    def zip_cracker(self):
         pass
     
-    def ssh_cracker():
+    def ssh_cracker(self):
         ''' This alllows you to brute force ssh passwords. '''
         st = time.process_time()
         import ssh_cracker
@@ -582,7 +607,7 @@ def help1():
 intro()
 def commands():
     while True:
-        cmd = input (">>> ")
+        cmd = input (">>> ").strip()
         if cmd.startswith('md5_str'):
             Hash1 = Hashes()
             Hash1.md5_str()
@@ -593,7 +618,7 @@ def commands():
             
         elif cmd.startswith("sha512_str"):
             Hash1 = Hashes()
-            Hash1.Sha512_str()
+            Hash1.Sha512sd_str()
             
         elif cmd == 'pwd':
             Op1 = Ops()
@@ -638,6 +663,10 @@ def commands():
         elif cmd == "sys info":
             Op1 = Ops()
             Op1.sys_info()
+
+        elif cmd == "tree":
+            Op1 = Ops()
+            Op1.tre()
                 
         elif cmd == "html_request":
            web1 = web()
@@ -719,11 +748,22 @@ def commands():
         elif cmd == "fake_name":
             SoE = SocialEng()
             SoE.fake_name()
+
+        elif cmd == "exif ext":
+            SoE = SocialEng()
+            SoE.exif()
             
         elif cmd == "ssh crack":
             Cracker1 = Cracker()
             Cracker1.ssh_cracker()
-            
+
+        elif cmd == "zip crack":
+            Cracker1 = Cracker()
+            Cracker1.zip_cracker()
+
+        elif cmd == "help(exif ext)":
+            print(SoE.exif.__doc__)
+
         elif cmd == "help(chat -c)":
             print(Net1.lanc_clt.__doc__)
             
@@ -786,6 +826,10 @@ def commands():
         elif cmd == "help(file_date)":
             Op1 = Ops
             print(Op1.file_date.__doc__)
+
+        elif cmd == "help(tree)":
+            Op1 = Ops
+            print(Op1.tre.__doc__)
                 
         elif cmd == "help(pg)":
             print(pass_Gen.__doc__)
@@ -844,35 +888,47 @@ def commands():
             exit()
             
         else:
+            print("Command not recognized. Enter 'help' for the list of the avaliable commands ")
             continue
 
 #Security Features (Authentication)
 while True:
 
-    cmd2 = input(">>> ")
-    if cmd2 == 'l' or cmd2 == "L":
-        Log_usn = input("Enter name:")
-        Log_pass = getpass.getpass(prompt="Enter your password:")
+    cmd2 = input(">>> ").strip()
 
-        Log_hash = hashlib.md5(Log_pass.encode('utf-8')).hexdigest()
-        
-        with open("Log.txt", "r") as f:
-            # Compare the hashed passwords
-            if Log_hash != f.read():
-                print('login error')
-            else:
-                print(f"Welcome back commander {Log_usn}")
-                commands()
+    try:
+        if cmd2 == 'l' or cmd2 == "L":
+            Log_usn = input("Enter name:")
+            Log_pass = getpass.getpass(prompt="Enter your password:").strip()
+
+            Log_hash = hashlib.md5(Log_pass.encode('utf-8')).hexdigest()
+            
+            with open("Log.txt", "r") as f:
+                # Compare the hashed passwords
+                if Log_hash != f.read():
+                    print('login error')
+                else:
+                    print(f"Welcome back commander {Log_usn}")
+                    commands()
+   
                     
-    elif cmd2 == "c" or cmd2 == "C":
-        Reg_usn = input("Enter name:")
+        elif cmd2 == "c" or cmd2 == "C":
+            Reg_usn = input("Enter name:").strip()
 
-        Reg_pass = getpass.getpass(prompt='Enter your password: ')
-                
-        Reg_hash = hashlib.md5(Reg_pass.encode('utf-8')).hexdigest()
+            Reg_pass = getpass.getpass(prompt='Enter your password: ').strip()
+                    
+            Reg_hash = hashlib.md5(Reg_pass.encode('utf-8')).hexdigest()
 
-        with open("Log.txt", "w") as f:
-               f.write(Reg_hash)
-    else:
-         print("Enter an option")    
+            with open("Log.txt", "w") as f:
+                f.write(Reg_hash)
         
+        elif cmd2  == "exit":
+            print ("Version 2.5")
+            print ("Created by CYBER ELITE NETWORK")
+            exit()
+
+        else:
+         print("Enter an option")
+
+    except FileNotFoundError:
+        print("You must create an account first. Enter C to create an account")
