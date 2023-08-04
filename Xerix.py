@@ -384,20 +384,37 @@ class Net:
           print("Execution time:",ep,"secs")
           print("-"*50)
                    
-    def ps(self,start_port,end_port,target):
+    def ps(self):
         ''' Scans for open ports of a network ip address '''
-        try:
-            print(f"Scanning ports {start_port} to {end_port} on {target}...")
-            for port in range(start_port, end_port + 1):
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(0.5)
-                result = sock.connect_ex((target, port))
-                if result == 0:
-                    print(f"Port {port} is open")
-                sock.close()
-        except TypeError:
-            print("Still working on it")
-    
+        st = time.process_time()
+        target = input("Enter Ip address: ")
+        start_port = int(input("Enter start port: "))
+        end_port = int(input("Enter end port: "))
+
+        open_port = []
+
+        for port in range(start_port,end_port + 1):
+            sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            sock.settimeout(0.5) # set the timeout here
+            result = sock.connect_ex((target, port))
+            print(f"Scanning ports {start_port} to {end_port} on {target}")
+
+            if result == 0:
+                print(f'Port {port} is open')
+                open_port.append(port)
+
+            sock.close()
+
+        print(f"List of open ports: {open_port}")
+
+        et = time.process_time()
+        ep = et - st
+        print(f"Total time taken to scan is {ep} secs")
+
+
+
+            
+        
     def lanc_host(self):
         ''' Creates a chat server within a LAN '''
         # create a socket object
@@ -573,7 +590,7 @@ class SocialEng:
     def temp_mail(self):
         ''' This is a temporay mail that use temp mail website'''
         st = time.process_time()
-        r = requests.get('temp-mail.org')
+        r = requests.get('https://temp-mail.org')
         print(r.status_code)
 
     
@@ -720,13 +737,14 @@ def commands():
         elif cmd == "http start server":
             Net1 = Net()
             Net1.http_server()
+
+        elif cmd == "temp-mail":
+            SoE = SocialEng()
+            SoE.temp_mail()
     
-        elif __name__ == '__main__' and cmd == 'ps scan':
+        elif cmd == 'ps scan':
             Net1 = Net()
-            target = input("Enter target IP address: ")
-            start_port = int(input("Enter start port: "))
-            end_port = int(input("Enter end port: "))
-            Net1.ps(target, start_port, end_port)
+            Net1.ps()
 
         elif cmd == "file_enc":
             Enc1 = Enc()
