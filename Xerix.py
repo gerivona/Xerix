@@ -20,8 +20,10 @@ import socketserver
 import cryptography
 from faker import Faker
 from datetime import date
+from Temp_mail import get_temporary_email
 from datetime import datetime
 from cryptography.fernet import Fernet
+
 
 # Introduction to Xerix program
 def intro():
@@ -587,13 +589,15 @@ class SocialEng:
         ep = et = st
         print(f"Execution time:{ep}secs")
 
+  
     def temp_mail(self):
-        ''' This is a temporay mail that use temp mail website'''
+        ''' Dispalys messages from a temporay email for 15 minutes'''
         st = time.process_time()
-        r = requests.get('https://temp-mail.org')
-        print(r.status_code)
-
-    
+        print(get_temporary_email())
+        et = time.process_time()
+        ep = et = st
+        print(f"Execution time:{ep}secs")
+        
 class Cracker:
 
     def __init__(self,name):
@@ -737,10 +741,6 @@ def commands():
         elif cmd == "http start server":
             Net1 = Net()
             Net1.http_server()
-
-        elif cmd == "temp-mail":
-            SoE = SocialEng()
-            SoE.temp_mail()
     
         elif cmd == 'ps scan':
             Net1 = Net()
@@ -778,6 +778,13 @@ def commands():
         elif cmd == "zip crack":
             Cracker1 = Cracker()
             Cracker1.zip_cracker()
+
+        elif cmd == "temp mail":
+            SoE = SocialEng()
+            SoE.temp_mail()
+
+        elif cmd == "help(temp mail)":
+            print(SoE.temp_mail.__doc)
 
         elif cmd == "help(exif ext)":
             print(SoE.exif.__doc__)
