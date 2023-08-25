@@ -9,4 +9,4 @@ Cyber Security Command line
 Exploit Framework comming soon
 
 
-Tested one Windows
+Tested on Windows
