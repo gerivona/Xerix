@@ -7,6 +7,4 @@ Cyber Security Command line
 - Exif data Extration
 - Zip File Brute Force
 Exploit Framework comming soon
-
-
-Tested on Windows
+#Tested on Windows
