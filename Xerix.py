@@ -2,8 +2,8 @@ import os
 import sys
 import time
 import whois
-import ipapi
 import json
+import ipapi
 import socket
 import random
 import getpass
@@ -102,6 +102,9 @@ def str_enc():
             c = f.decrypt(bytes(encText, 'utf-8'))
             print(c.decode('utf-8'))
                 
+        elif text == "exit":
+            break
+
         else: 
                 print ("Not found")      
     et = time.process_time()
@@ -174,7 +177,10 @@ class Ops:
     def tre(self):
         ''' show of the directory and files '''
         st = time.process_time()
-        os.system('tree')
+        try:
+            os.system('tree')
+        except KeyboardInterrupt:
+            commands()
         et = time.process_time()
         ep = st - et
         print(f"Execution time {ep} secs")
@@ -221,7 +227,14 @@ class Ops:
        et = time.process_time()
        ep = et - st
        print(f"Execution time:{ep} secs")
-       
+
+    def cmd(self):
+        ''' This functions allows you to use cmd module''' 
+        st = time.process_time()
+        et = time.process_time()
+        ep = et - st
+        print(f"Executioon time:{ep}secs")  
+
 # The Web section
 class web:
 
@@ -260,10 +273,21 @@ class web:
         st = time.process_time()
         x = input("Enter domain:")
         domain = whois.whois(x)
+        print(domain)
         et = time.process_time()
         ep = et - st
         print("Execution time:",ep,"secs")
         print("-"*50)
+
+    def mail():
+       ''' This allows you send email in xerix'''
+       st = time.process_time()
+       import Mail
+       et = time.process_time()
+       ep = et - st
+       print(f"Execution time:{ep}secs")
+       print("_"*50)
+
 
 class Enc:
 
@@ -354,7 +378,7 @@ class Net:
         print("-"*50)
        
     def web_ip(self):
-        ''' shows the ip address of a website'''
+        ''' Shows the ip address of a website'''
         st = time.process_time()
         try:
             web_input = input ("Enter website:")
@@ -368,7 +392,7 @@ class Net:
         print("-"*50)
 
     def ip_track(ip):
-          ''' tracks the ip address by providing the information of the country where the ip address is located and many more'''
+          ''' Tracks the ip address by providing the information of the country where the ip address is located and many more'''
           st = time.process_time()
           try:
             location = ipapi.location(ip)
@@ -388,34 +412,35 @@ class Net:
                    
     def ps(self):
         ''' Scans for open ports of a network ip address '''
-        st = time.process_time()
-        target = input("Enter Ip address: ")
-        start_port = int(input("Enter start port: "))
-        end_port = int(input("Enter end port: "))
+        try:
+            st = time.process_time()
+            target = input("Enter Ip address: ")
+            ipaddress.IPv4Address(target) # Validating the ip
+            start_port = int(input("Enter start port: "))
+            end_port = int(input("Enter end port: "))
 
-        open_port = []
+            open_port = []
 
-        for port in range(start_port,end_port + 1):
-            sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-            sock.settimeout(0.5) # set the timeout here
-            result = sock.connect_ex((target, port))
-            print(f"Scanning ports {start_port} to {end_port} on {target}")
+            for port in range(start_port,end_port + 1):
+                sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+                sock.settimeout(0.5) # set the timeout here
+                result = sock.connect_ex((target, port))
+                print(f"Scanning ports {start_port} to {end_port} on {target}")
 
-            if result == 0:
-                print(f'Port {port} is open')
-                open_port.append(port)
+                if result == 0:
+                    print(f'Port {port} is open')
+                    open_port.append(port)
 
-            sock.close()
+                sock.close()
 
-        print(f"List of open ports: {open_port}")
+            print(f"List of open ports: {open_port}")
+        except:
+            print('Enter a valid ip address')
 
         et = time.process_time()
         ep = et - st
         print(f"Total time taken to scan is {ep} secs")
 
-
-
-            
         
     def lanc_host(self):
         ''' Creates a chat server within a LAN '''
@@ -628,7 +653,7 @@ def help1():
 intro()
 def commands():
     while True:
-        cmd = input (">>> ").strip()
+        cmd = input ("X6>>> ").strip()
         if cmd.startswith('md5_str'):
             Hash1 = Hashes()
             Hash1.md5_str()
@@ -919,6 +944,7 @@ def commands():
 #Security Features (Authentication)
 while True:
 
+
     cmd2 = input(">>> ").strip()
 
     try:
@@ -926,7 +952,7 @@ while True:
             Log_usn = input("Enter name:")
             Log_pass = getpass.getpass(prompt="Enter your password:").strip()
 
-            Log_hash = hashlib.md5(Log_pass.encode('utf-8')).hexdigest()
+            Log_hash = hashlib.sha256(Log_pass.encode('utf-8')).hexdigest()
             
             with open("Log.txt", "r") as f:
                 # Compare the hashed passwords
@@ -942,7 +968,7 @@ while True:
 
             Reg_pass = getpass.getpass(prompt='Enter your password: ').strip()
                     
-            Reg_hash = hashlib.md5(Reg_pass.encode('utf-8')).hexdigest()
+            Reg_hash = hashlib.sha256(Reg_pass.encode('utf-8')).hexdigest()
 
             with open("Log.txt", "w") as f:
                 f.write(Reg_hash)
