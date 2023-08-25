@@ -614,14 +614,6 @@ class SocialEng:
         ep = et = st
         print(f"Execution time:{ep}secs")
 
-  
-    def temp_mail(self):
-        ''' Dispalys messages from a temporay email for 15 minutes'''
-        st = time.process_time()
-        print(get_temporary_email())
-        et = time.process_time()
-        ep = et = st
-        print(f"Execution time:{ep}secs")
         
 class Cracker:
 
@@ -803,13 +795,6 @@ def commands():
         elif cmd == "zip crack":
             Cracker1 = Cracker()
             Cracker1.zip_cracker()
-
-        elif cmd == "temp mail":
-            SoE = SocialEng()
-            SoE.temp_mail()
-
-        elif cmd == "help(temp mail)":
-            print(SoE.temp_mail.__doc)
 
         elif cmd == "help(exif ext)":
             print(SoE.exif.__doc__)
