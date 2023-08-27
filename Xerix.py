@@ -20,7 +20,6 @@ import socketserver
 import cryptography
 from faker import Faker
 from datetime import date
-from Temp_mail import get_temporary_email
 from datetime import datetime
 from cryptography.fernet import Fernet
 
@@ -34,48 +33,50 @@ def intro():
     print("L <----- To login")
     print("-" *100)
 
+#Decorators
+def exec_time(func):
+    
+    def timer1(*args,**kwargs):
+        st = time.time()
+        func(*args,*kwargs)
+        et = time.time() - st
+        print(f'Execution time: {et} secs')
+        print(50 * '-')
+    return timer1
+
+
+
 # Text conversion to hash  
+
 class Hashes:
     
     def __init__(self):
         pass
-       
-
+    
+    @exec_time
     def md5_str(self):
         '''it takes a string and converts it to a md5 hash'''
         a_string = input("Enter text to be hashed:")
-        st = time.process_time()
         hashed_string = hashlib.md5(a_string.encode('utf-8')).hexdigest()
         print(hashed_string)
         clip_board = pyperclip.copy(hashed_string)
-        et = time.process_time()
-        ep = et - st
-        print("Execution time:",ep,"sec")
-        print("-"*50)        
         
+    @exec_time  
     def Sha256_str(self):
         '''it takes a string and converts it to sha256 hash'''
-        st = time.process_time()
         b_string = input("Enter text to be hashed:")
         hashed_string = hashlib.sha256(b_string.encode('utf-8')).hexdigest()
         print(hashed_string)
         clip_board = pyperclip.copy(hashed_string)
-        et = time.process_time()
-        ep = et - st
-        print("Execution time",ep,"sec")
-        print("-"*50)
-            
+
+    @exec_time    
     def Sha512_str(self):
         '''it takes a string and coverts it to sha512 hash'''
-        c_string = input("Enter text to be hashed:")
-        st = time.process_time()  
+        c_string = input("Enter text to be hashed:")  
         hashed_string = hashlib.sha512(c_string.encode('utf-8')).hexdigest ()
         print(hashed_string)
         clip_board = pyperclip.copy(hashed_string)
-        et = time.process_time()
-        ep = et - st
-        print("Execution time:",ep,"sec") 
-        print("-"*50)
+      
 
 #Encrypting strings 
 def str_enc():
@@ -117,32 +118,26 @@ class Ops:
 
     def __init__(self):
         pass
-  
+    
+    @exec_time
     def pwd(self):
         ''' shows the working directory'''
-        st = time.process_time()
         print(os.getcwd())
-        et = time.process_time()
-        ep = et - st
-        print("Execution time:",ep,"secs")
-        print('-'*50)
+       
+        
          
     def cls(self):
         '''it clears the screen'''
         os.system('cls')
-         
+
+    @exec_time    
     def cd(self):
         ''' changes the directory'''
-        st = time.process_time()       
         path = input ("Enter path:")
         try:
             print (os.chdir(path))
         except:
             print("Enter a valid path")
-        et = time.process_time()
-        ep = et - st
-        print(f"Execution time:{ep}secs")
-        print("-"*50)
 
     def shutdown(self):
         ''' shutdowns your computer '''
@@ -151,83 +146,56 @@ class Ops:
     def shutab(self):
         '''aborts the shutdown command '''
         os.system("shutdown /a")
-          
+
+    @exec_time     
     def mkdir(self):
-        ''' makes a new directory'''
-        st = time.process_time()          
+        ''' makes a new directory'''        
         var = input("Enter the name of the directory:")
         os.mkdir(var)
         print ("This folder is created in the working directory")
         print ('folder created successfully')
-        et = time.process_time()
-        ep = et - st
-        print(f"Execution time:{ep}secs")
-        print("-"*50)
-
+      
+    @exec_time
     def ls(self):
         ''' lists all the files in the current directory'''
-        st = time.process_time()
         print (os.listdir())
-        et = time.process_time()
-        ep = et - st
-        print("Execution time:",ep,"secs")
-        print("-"*50)
-
-
+       
+    @exec_time
     def tre(self):
         ''' show of the directory and files '''
-        st = time.process_time()
         try:
             os.system('tree')
         except KeyboardInterrupt:
             commands()
-        et = time.process_time()
-        ep = st - et
-        print(f"Execution time {ep} secs")
 
+    @exec_time 
     def rmdir (self):
         ''' remove the current directory'''
-        st = time.time()
         rmip = input ("Enter folder:")
         try:
            os.rmdir(rmip)
         except:
             print("Enter a valid folder")
-        et = time.time()
-        ep = st - et
-        print("Execution time:",ep,"secs")
-        print("-"*50)
-
+    
+    @exec_time
     def meta_info(self):
         ''' gives meta information about a file'''
-        st = time.process_time()   
         file_info  = input ("Enter file name and extension:")
         print (os.stat(file_info))
-        et = time.process_time()
-        ep = et - st 
-        print("Exection time:",ep,"secs")
-        print("-"*50)
-            
+    
+    @exec_time        
     def file_date(self):
-        '''' it gives you the last modification date of a file'''
-        st = time.process_time()        
-        file = input ("Enter file name and extension:")
+        '''' it gives you the last modification date of a file'''   
+        file_in = input ("Enter file name and extension:")
         print ("Please make sure the file is in the current directory")
-        t = os.stat(file).st_mtime
+        t = os.stat(file_in).st_mtime
         print(datetime.fromtimestamp(t))
-        et = time.process_time()
-        ep = et - st
-        print ("Execution time:",ep,"secs")
-        print("-"*50)
 
+    @exec_time  
     def sys_info(self):
        ''' This prints out information about a system.'''
-       st = time.process_time()
        os.system('systeminfo')
-       et = time.process_time()
-       ep = et - st
-       print(f"Execution time:{ep} secs")
-
+      
     def cmd(self):
         ''' This functions allows you to use cmd module''' 
         st = time.process_time()
@@ -241,52 +209,38 @@ class web:
     def __init__(self):
         pass
     
+
+    @exec_time
     def html_request(self):
         ''' shows the html code of a website'''
         try:
-            st = time.process_time()
             html = input ("Enter URL:")
             x = requests.get(html)              
             print (x.text)
-            et = time.process_time()
-            ep = et - st
-            print("Execution time:",ep,"secs")
-            print("-"*50)
         except:
            print('No connection')
-          
+
+    @exec_time      
     def html_write(self):
-        ''' if allows you to write html file'''
-        st = time.process_time()
+        ''' it allows you to write html file'''
         path2 = input("Enter directory:")
         os.chdir(path2)
         with open (input("Enter the HTML file to be created:"),"w") as codes:
             codes.write(input("Enter your codes:"))
             codes.close()
-        et = time.process_time()
-        ep = et - st
-        print("Execution time:",ep,"secs")
-        print("-"*50)
-     
+
+    @exec_time   
     def domain(self):
         ''' checks the avaliablity of a domain'''
-        st = time.process_time()
         x = input("Enter domain:")
         domain = whois.whois(x)
         print(domain)
-        et = time.process_time()
-        ep = et - st
-        print("Execution time:",ep,"secs")
-        print("-"*50)
-
+        
+    @exec_time
     def mail():
        ''' This allows you send email in xerix'''
-       st = time.process_time()
        import Mail
-       et = time.process_time()
-       ep = et - st
-       print(f"Execution time:{ep}secs")
-       print("_"*50)
+      
 
 
 class Enc:
@@ -294,31 +248,26 @@ class Enc:
       def __init__(self):
         print('_' * 50)
 
+
+      @exec_time  
       def enc_file_key(self):
         ''' This is used to encrypt a file in symmetric key cryptography using the fernet encryption algrorithms'''
-        st = time.process_time()
         try:
             import Encryptor
         except:
             print("Try a valid key")
             print("You could generate a key using the sym key command")
             print("-"*50)
-        et = time.process_time()
-        ep = et - st 
-        print("Execution time:",ep,"secs")
-        print("-"*50) 
-      
+        
+      @exec_time
       def dec_file_key():
         ''' This is used to decrypt a file that has been encrypted with symmetric key cryptography '''
         try:
-            st = time.process_time()
             import Decryptor
-            et = time.process_time()
-            ep = et - st
-            print("Execution time:",ep,"secs")
         except:
             print("Enter a valid file")
- 
+
+@exec_time 
 def pass_Gen():                 
     ''' This is a password generator'''
     # Choose a random selection of characters from the set of lowercase letters, uppercase letters, and digits
@@ -333,21 +282,18 @@ class Net:
 
     def __init__(self):
         pass
-   
+
+    @exec_time
     def ip_private(self):
       '''shows you your private ip address'''
-      st = time.process_time()
       get = socket.gethostname()    
       x = socket.gethostbyname(get)
       print(get,":",x)
-      et = time.process_time()
-      ep = et - st
-      print("Execution time",ep,"secs")
-      print("-"*50)
-     
+
+
+    @exec_time 
     def ip_public(self):
         '''shows the public ip address '''
-        st = time.time()
         try:
             response = requests.get("https://api.ipify.org")
             if response.status_code == 200:
@@ -357,11 +303,8 @@ class Net:
                return "Unable to get IP address"
         except:
            print("No connection")  
-        et = time.time()
-        ep = et - st
-        print("Execution time:",ep,"secs")
-        print("-"*50)
-  
+      
+    @exec_time
     def ip_config(self):
         ''' shows the both the public and private ip address'''
         s = socket.gethostname()
@@ -375,22 +318,18 @@ class Net:
                 print("Unable to get ip address")
         except:
             print("No connection")
-        print("-"*50)
-       
+
+    @exec_time  
     def web_ip(self):
         ''' Shows the ip address of a website'''
-        st = time.process_time()
         try:
             web_input = input ("Enter website:")
             s = socket.gethostbyname(web_input)
             print(s)
         except:
            print("Unable to find ip address")
-        et = time.process_time()
-        ep = et - st
-        print(f"Execution time:{ep}secs")
-        print("-"*50)
-
+        
+    @exec_time   
     def ip_track(ip):
           ''' Tracks the ip address by providing the information of the country where the ip address is located and many more'''
           st = time.process_time()
@@ -405,15 +344,11 @@ class Net:
             print("oragansation:",location['org'])     
           except:
             print("Unable to find info of the ip address") 
-          et = time.process_time()
-          ep = et - st
-          print("Execution time:",ep,"secs")
-          print("-"*50)
-                   
+          
+    @exec_time              
     def ps(self):
         ''' Scans for open ports of a network ip address '''
         try:
-            st = time.process_time()
             target = input("Enter Ip address: ")
             ipaddress.IPv4Address(target) # Validating the ip
             start_port = int(input("Enter start port: "))
@@ -437,11 +372,7 @@ class Net:
         except:
             print('Enter a valid ip address')
 
-        et = time.process_time()
-        ep = et - st
-        print(f"Total time taken to scan is {ep} secs")
-
-        
+    @exec_time    
     def lanc_host(self):
         ''' Creates a chat server within a LAN '''
         # create a socket object
@@ -489,6 +420,7 @@ class Net:
            client.close()
            print(f"Connection with {address} closed")
 
+    @exec_time
     def lanc_clt(self):
         '''Connecting to a server created by another Xerix commander or created by you'''
         try:
@@ -528,7 +460,8 @@ class Net:
            client.close()
         except ConnectionRefusedError:
             print("No connection try again!")
-
+    
+    @exec_time
     def Net_Sender():
         ''' Allows you to send a file while being the host.'''
 
@@ -543,7 +476,8 @@ class Net:
         
     def Nets_Cli():
         ''' Allows you to recieve a file incomming from the host over a LAN.'''
-        
+    
+    @exec_time    
     def http_server(self):
         ''' This setups a http server. '''
         try:
@@ -559,20 +493,17 @@ class Net:
             et = time.process_time()
             ep = et - st
             print(f"Exexcution time:{ep} secs")
-                
+
+@exec_time                
 def sym_gen_key():
     '''' Generates a 32 bit key for symmetric key encryption.'''
-    st = time.process_time()
     key = Fernet.generate_key()
     with open("sym.txt","wb") as f:
         f.write(bytes(key))
     print(key)     
     str_key = codecs.decode(key)
     pyperclip.copy(str_key)
-    et = time.process_time()
-    ep = et - st
-    print(f"Execution time:{ep}secs")
-    print('-'*50)
+    
       
 def To_date():
    '''
@@ -591,9 +522,9 @@ class SocialEng:
     def __init__(self):
         pass
     
+    @exec_time
     def fake_name(self):
       '''this generates random fake names.'''
-      st =time.process_time()
       try:
         x = int(input('Enter the numbers of name:'))
         faker = Faker()
@@ -601,19 +532,13 @@ class SocialEng:
             print(faker.name())
       except KeyboardInterrupt:
         print('Enter a valid Number')
-      et = time.process_time()
-      ep = et - st
-      print(f'Execution time:{ep}secs')
-      print(50 * "_")
-
+    
+    
+    @exec_time
     def exif(self):
         ''' This actually strips exif information from an image written by David Bombal '''
-        st = time.process_time()
         import Exif
-        et = time.process_time()
-        ep = et = st
-        print(f"Execution time:{ep}secs")
-
+    
         
 class Cracker:
 
@@ -623,14 +548,10 @@ class Cracker:
     def zip_cracker(self):
         pass
     
+    @exec_time
     def ssh_cracker(self):
         ''' This alllows you to brute force ssh passwords. '''
-        st = time.process_time()
         import ssh_cracker
-        et = time.process_time()
-        ep = et - st
-        print(f"Exexuction time: {ep} secs")
-        print("_" * 50)
 
 class Malware:
     
@@ -656,7 +577,7 @@ def commands():
             
         elif cmd.startswith("sha512_str"):
             Hash1 = Hashes()
-            Hash1.Sha512sd_str()
+            Hash1.Sha512_str()
             
         elif cmd == 'pwd':
             Op1 = Ops()
