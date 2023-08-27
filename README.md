@@ -1,5 +1,5 @@
-<i> Xerix </i>
-Cyber Security Command line
+<i> Xerix 
+Cyber Security Command line</i>
 - This command line allows you to encrypt and decrypt file and hash strings
 - It also has a port scanner that scans 65535 ports 
 - Domain checker
