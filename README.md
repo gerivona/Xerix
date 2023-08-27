@@ -4,7 +4,7 @@ Cyber Security Command line
 - It also has a port scanner that scans 65535 ports 
 - Domain checker
 - SSH Brute Force
-- Exif data Extration
+- Exif data Extraction
 - Zip File Brute Force
 Exploit Framework comming soon
 #Tested on Windows
