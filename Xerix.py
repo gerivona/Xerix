@@ -1,10 +1,12 @@
 import os
 import sys
+import pprint
 import time
 import whois
 import json
 import ipapi
 import socket
+import shutil
 import random
 import getpass
 import codecs
@@ -44,10 +46,17 @@ def exec_time(func):
         print(50 * '-')
     return timer1
 
+def key_interup(func):
+
+    def method(*args,**kwargs):
+        try:
+            func(*args,**kwargs)
+        except KeyboardInterrupt:
+            print(commands)
+    return method
 
 
 # Text conversion to hash  
-
 class Hashes:
     
     def __init__(self):
@@ -57,7 +66,7 @@ class Hashes:
     def md5_str(self):
         '''it takes a string and converts it to a md5 hash'''
         a_string = input("Enter text to be hashed:")
-        hashed_string = hashlib.md5(a_string.encode('utf-8')).hexdigest()
+        hashed_string = hashlib.md5(b'a_string').hexdigest()
         print(hashed_string)
         clip_board = pyperclip.copy(hashed_string)
         
@@ -65,7 +74,7 @@ class Hashes:
     def Sha256_str(self):
         '''it takes a string and converts it to sha256 hash'''
         b_string = input("Enter text to be hashed:")
-        hashed_string = hashlib.sha256(b_string.encode('utf-8')).hexdigest()
+        hashed_string = hashlib.sha256(b'b_string').hexdigest()
         print(hashed_string)
         clip_board = pyperclip.copy(hashed_string)
 
@@ -73,46 +82,47 @@ class Hashes:
     def Sha512_str(self):
         '''it takes a string and coverts it to sha512 hash'''
         c_string = input("Enter text to be hashed:")  
-        hashed_string = hashlib.sha512(c_string.encode('utf-8')).hexdigest ()
+        hashed_string = hashlib.sha512(b'c_string').hexdigest ()
         print(hashed_string)
         clip_board = pyperclip.copy(hashed_string)
       
 
 #Encrypting strings 
+@key_interup
+@exec_time
 def str_enc():
-    '''it encrypts a string using fernet and it also decrypts the string'''
-    st = time.process_time()         
+    '''it encrypts a string using fernet and it also decrypts the string'''        
     while True:
         text = input ("Enter an option:").strip()
           
 # encryption
-        if text == ("encrypt"):
-            key = bytes(input("Enter key:"),"utf-8")
-            fernet = Fernet(key)
-            Text = input("Enter text:")
-            x = bytes(Text,'utf-8')
-            x = fernet.encrypt(x)
-            print(x)
-            break
-#decryption
-        elif text == "decrypt":
+        try:
+            if text == ("encrypt"):
+                key = bytes(input("Enter key:"),"utf-8")
+                fernet = Fernet(key)
+                Text = input("Enter text:")
+                x = bytes(Text,'utf-8')
+                x = fernet.encrypt(x)
+                print(x)
+                break
+        
+            elif text == "decrypt":
 
-            encText = input("Enter encrypted text:").strip()
-            key = input("Enter key:")
-            f = Fernet(key)
-            c = f.decrypt(bytes(encText, 'utf-8'))
-            print(c.decode('utf-8'))
-                
-        elif text == "exit":
-            break
+                encText = input("Enter encrypted text:").strip()
+                key = input("Enter key:")
+                f = Fernet(key)
+                c = f.decrypt(bytes(encText, 'utf-8'))
+                print(c.decode('utf-8'))
+                    
+            elif text == "exit":
+                break
 
-        else: 
-                print ("Not found")      
-    et = time.process_time()
-    ep = et - st
-    print("Execution time:",ep,"sec")
-    print("-" *50)
+            else: 
+                    print ("Not found")
 
+        except ValueError:
+            print("Please enter a valid key to be able to decrypt the string")
+   
 #The class that has operating system commands
 class Ops:
 
@@ -123,9 +133,7 @@ class Ops:
     def pwd(self):
         ''' shows the working directory'''
         print(os.getcwd())
-       
-        
-         
+                
     def cls(self):
         '''it clears the screen'''
         os.system('cls')
@@ -159,14 +167,13 @@ class Ops:
     def ls(self):
         ''' lists all the files in the current directory'''
         print (os.listdir())
-       
+
+    @key_interup   
     @exec_time
     def tre(self):
         ''' show of the directory and files '''
-        try:
-            os.system('tree')
-        except KeyboardInterrupt:
-            commands()
+        os.system('tree')
+        
 
     @exec_time 
     def rmdir (self):
@@ -195,14 +202,17 @@ class Ops:
     def sys_info(self):
        ''' This prints out information about a system.'''
        os.system('systeminfo')
-      
+
+    @exec_time  
     def cmd(self):
         ''' This functions allows you to use cmd module''' 
-        st = time.process_time()
-        et = time.process_time()
-        ep = et - st
-        print(f"Executioon time:{ep}secs")  
+        import setup
 
+    @exec_time
+    def cat(self):
+        '''This allows you to view the contents of a file'''
+
+ 
 # The Web section
 class web:
 
@@ -243,14 +253,14 @@ class web:
       
 
 
-class Enc:
+class Encryption:
 
-      def __init__(self):
+    def __init__(self):
         print('_' * 50)
 
 
-      @exec_time  
-      def enc_file_key(self):
+    @exec_time  
+    def enc_file_key(self):
         ''' This is used to encrypt a file in symmetric key cryptography using the fernet encryption algrorithms'''
         try:
             import Encryptor
@@ -259,8 +269,8 @@ class Enc:
             print("You could generate a key using the sym key command")
             print("-"*50)
         
-      @exec_time
-      def dec_file_key():
+    @exec_time
+    def dec_file_key():
         ''' This is used to decrypt a file that has been encrypted with symmetric key cryptography '''
         try:
             import Decryptor
@@ -289,7 +299,6 @@ class Net:
       get = socket.gethostname()    
       x = socket.gethostbyname(get)
       print(get,":",x)
-
 
     @exec_time 
     def ip_public(self):
@@ -332,7 +341,6 @@ class Net:
     @exec_time   
     def ip_track(ip):
           ''' Tracks the ip address by providing the information of the country where the ip address is located and many more'''
-          st = time.process_time()
           try:
             location = ipapi.location(ip)
             print("country:",location['country_name'])
@@ -374,7 +382,7 @@ class Net:
 
     @exec_time    
     def lanc_host(self):
-        ''' Creates a chat server within a LAN '''
+        ''' Creates a chat server  within a LAN '''
         # create a socket object
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -481,7 +489,6 @@ class Net:
     def http_server(self):
         ''' This setups a http server. '''
         try:
-            st = time.process_time()
             PORT = 8000
             Handler = http.server.SimpleHTTPRequestHandler
 
@@ -489,10 +496,8 @@ class Net:
                 print("Server started at port", PORT)
                 httpd.serve_forever()
         except KeyboardInterrupt:
+            commands()
 
-            et = time.process_time()
-            ep = et - st
-            print(f"Exexcution time:{ep} secs")
 
 @exec_time                
 def sym_gen_key():
@@ -503,7 +508,7 @@ def sym_gen_key():
     print(key)     
     str_key = codecs.decode(key)
     pyperclip.copy(str_key)
-    
+
       
 def To_date():
    '''
@@ -553,339 +558,398 @@ class Cracker:
         ''' This alllows you to brute force ssh passwords. '''
         import ssh_cracker
 
+class VulScan:
+
+    def __init__(self):
+        pass
+    
+    @exec_time
+    def Xss(self):
+        '''Scans Websites to check if their is an xss vulneraliblity'''
+        Website = input('Enter the website that you want to scan:')
+        r = requests.get(Website)
+        if r.status_code == 200:
+            print('Connection Sucessfull')
+        else:
+            print('Invalid Connection')
+
+
+
+
 class Malware:
     
     def __init_():
         pass
+
  
-def help1():     
-    help2 = ("cd <--- changes directory","cls <--- clears the screen","dom av <--- checks for the avalibility of  a domain","dec file <--- used to decrypt files that are encrypted","enc file <--- used to encrypt file","file_info  <--- prints information about a file","file_date <--- shows the last modification date about  a file","ip/config <--- prints the  ip address of the device","md5_str <-- hashes a string in md5 algorithm","mkdir <--- creates directory","pg <--- generates a passowrd","sha256 <--- hashes a string in sha256 algorithm","sha512 <--- hashes a string in sha512 algorithm","sym key <--- randomly generate a symmetric key")
-    print(help2)
+def help_func():     
+    help = '''
+                            XERIX HELP DOCUMENTATION
+
+        md5_str : This command allows you to hash a string using the md5 hash algorithm.
+        sha256_str : This command allows you to hash a string using the sha256 hash algorithm.
+        sha512_str : This command allows you to hash a string using the sha512 hash algortihm.
+        str_enc : This command has two inner commands.
+                     Encrypt - This allows you to encrypt a string using the ferent algorithm.
+                     Decrypt - This allows you to decrypt an encrypted strings.
+        pwd : This command shows the currrent working directory.
+        cls : This command clears the screen.
+        cd : This command allows you to change the current working directory.
+        shutdown : This command shutsdown the computer.
+        shutdown -a : This command aborts the shutdown order.
+        mkdir : This command is used for creating a new or folder.
+        ls : This command lists all the contents of the current working directory.
+        tree : This command list all the paths and files in a directory.
+        rmdir : This command is used for deleting a folder.
+        meta_info : This command shows the users information about a file in the current working directory.
+        file_date : This command shows the users the last file modification date.
+        sys_info : This command shows the system information.
+        os term : This command allows the users to use the PC terminal.
+
+
+    '''
+    print(help)
     
-# help section                        
-intro()
+# help section                      
+
 def commands():
-    while True:
-        cmd = input ("X6>>> ").strip()
-        if cmd.startswith('md5_str'):
-            Hash1 = Hashes()
-            Hash1.md5_str()
-            
-        elif cmd.startswith('sha256_str'):
-            Hash1 = Hashes()
-            Hash1.Sha256_str()
-            
-        elif cmd.startswith("sha512_str"):
-            Hash1 = Hashes()
-            Hash1.Sha512_str()
-            
-        elif cmd == 'pwd':
-            Op1 = Ops()
-            Op1.pwd()
-            
-        elif cmd == 'cd':
-            Op1 = Ops()
-            Op1.cd()
-            
-        elif cmd == 'mkdir':
-            Op1 = Ops()
-            Op1.mkdir()
-            
-        elif cmd == 'ls':
-            Op1 = Ops ()
-            Op1.ls()
-            
-        elif cmd == 'rmdir':
-            Op1 = Ops()
-            Op1.rmdir()
-            
-        elif cmd == "meta_info":
-            Op1 = Ops()
-            Op1.meta_info()
+    try:
+        while True:
+            cmd = input ("X6>>> ").strip()
+            if cmd.startswith('md5_str'):
+                Hash1 = Hashes()
+                Hash1.md5_str()
                 
-        elif cmd == "cls":
-            Op1 = Ops()
-            Op1.cls()
-              
-        elif cmd == "file_date":
-            Op1 = Ops()
-            Op1.file_date()
-            
-        elif cmd == "shutdown":
-            Op1 = Ops()
-            Op1.shutdown()
-            
-        elif cmd == "shutdown -a":
-            Op1 = Ops()
-            Op1.shutab()
-            
-        elif cmd == "sys info":
-            Op1 = Ops()
-            Op1.sys_info()
-
-        elif cmd == "tree":
-            Op1 = Ops()
-            Op1.tre()
+            elif cmd.startswith('sha256_str'):
+                Hash1 = Hashes()
+                Hash1.Sha256_str()
                 
-        elif cmd == "html_request":
-           web1 = web()
-           web1.html_request()
-           
-        elif cmd == "html_write":
-            web1 = web()
-            web1.html_write()
-            
-        elif cmd == "str_enc":
-           str_enc()
-           
-        elif cmd == "pg":
-           pass_Gen()
-           
-        elif cmd == 'help':
-            help1()
+            elif cmd.startswith("sha512_str"):
+                Hash1 = Hashes()
+                Hash1.Sha512_str()
                 
-        elif cmd == "dom av":
-           web1 = web()
-           web1.domain()
-           
-        elif cmd == "ip/private":
-            Net1 = Net()
-            Net1.ip_private()
-            
-        elif cmd == "ip/public":
-            Net1 = Net()
-            Net.ip_public()
-            
-        elif cmd == "ip/config":
-            Net1 = Net()
-            Net1.ip_config()
-            
-        elif cmd == "ip/web":
-            Net1 = Net()
-            Net1.web_ip()
-            
-        elif cmd == "ip/track":
-            Net1 = Net()
-            Net1.ip_track()
-            
-        elif cmd =="chat -h":
-            Net1 = Net()
-            Net1.lanc_host()
-            
-        elif cmd == "chat -c":
-            Net1 = Net()
-            Net1.lanc_clt()
-            
-        elif cmd == "http start server":
-            Net1 = Net()
-            Net1.http_server()
-    
-        elif cmd == 'ps scan':
-            Net1 = Net()
-            Net1.ps()
-
-        elif cmd == "file_enc":
-            Enc1 = Enc()
-            Enc1.enc_file_key()
-            
-        elif cmd == "file_dec":
-            Enc = Enc1
-            Enc1.dec_file_key()
-            
-        elif cmd == "sym key":
-          sym_gen_key()
-          
-        elif cmd == "date":
-            To_date()
-            
-        elif cmd == "time":
-            timer()
-            
-        elif cmd == "fake_name":
-            SoE = SocialEng()
-            SoE.fake_name()
-
-        elif cmd == "exif ext":
-            SoE = SocialEng()
-            SoE.exif()
-            
-        elif cmd == "ssh crack":
-            Cracker1 = Cracker()
-            Cracker1.ssh_cracker()
-
-        elif cmd == "zip crack":
-            Cracker1 = Cracker()
-            Cracker1.zip_cracker()
-
-        elif cmd == "help(exif ext)":
-            print(SoE.exif.__doc__)
-
-        elif cmd == "help(chat -c)":
-            print(Net1.lanc_clt.__doc__)
-            
-        elif cmd == "help(chat -h)":
-            print(Net1.lanc_host.__doc__)
-            
-        elif cmd == 'help(fake_name)':
-            print(SoE.fake_name.__doc__)
-            
-        elif cmd == "help(date)":
-            print(date.__doc__)
-            
-        elif cmd == "help(time)":
-            print(time.__doc__)
-            
-        elif cmd == 'help(md5)':
-            Hash1 = Hashes
-            print(Hash1.md5_str.__doc__)
-            
-        elif cmd == "help(sha256)":
-            Hash1 = Hashes
-            print(Hash1.Sha256_str.__doc__)
-            
-        elif cmd == 'help(sha512)':
-            Hash1 = Hashes
-            print(Hash1.Sha512_str.__doc__)
-            
-        elif cmd == "help(pwd)":
-            Op1 = Ops
-            print(Op1.pwd.__doc__)
-            
-        elif cmd == "help(cd)":
-            Op1 = Ops
-            print(Op1.cd.__doc__)
-            
-        elif cmd == "help(mkdir)":
-            Op1 = Ops()
-            print(Op1.mkdir.__doc__)
-            
-        elif cmd == "help(ls)":
-            Op1 = Ops
-            print(Op1.ls.__doc__)
-            
-        elif cmd == "help(rmdir)":
-            Op1 = Ops
-            print(Op1.rmdir.__doc__)
-            
-        elif cmd == "help(meta_info)":
-            Op1 = Ops
-            print(Op1.meta_info.__doc__)
-            
-        elif cmd == "help(shutdown)":
-            Op1 = Ops
-            print(Op1.shutdown.__doc__)
-            
-        elif cmd == "help(shutdown -a)":
-            Op1 = Ops
-            print(Op1.shutab.__doc__)
-            
-        elif cmd == "help(file_date)":
-            Op1 = Ops
-            print(Op1.file_date.__doc__)
-
-        elif cmd == "help(tree)":
-            Op1 = Ops
-            print(Op1.tre.__doc__)
+            elif cmd == 'pwd':
+                Op1 = Ops()
+                Op1.pwd()
                 
-        elif cmd == "help(pg)":
-            print(pass_Gen.__doc__)
-               
-        elif cmd == "help(html_request)":
-            print(web1.html_request.__doc__)
-               
-        elif cmd == "help(html_write)":
-            print(web1.html_write.__doc__)
+            elif cmd == 'cd':
+                Op1 = Ops()
+                Op1.cd()
                 
-        elif cmd == "help(str enc)":
-            print(str_enc.__doc__)
-            
-        elif cmd == "help(dom av)":
-            print(web1.domain.__doc__)
-            
-        elif cmd == "help(ip/private)":
-            print(Net1.ip_private.__doc__)
-            
-        elif  cmd ==  "help(ip/public)":
-            print(Net1.ip_public.__doc__)
-            
-        elif cmd  == "help(ip/config)":
-            print(Net1.ip_config.__doc__)
-            
-        elif cmd == "help(ip/track)":
-            print(Net1.ip_track.__doc__)
-
-        elif cmd == "help(ps scan)":
-            print(Net1.ps.__doc__)   
-                     
-        elif cmd == "help(enc file)":
-            print(Enc1.enc_file_key.__doc__)
-            
-        elif cmd == "help(dec file)":
-            print(Enc1.dec_file_key.__doc__)
-            
-        elif cmd == "help(sym key)":
-            print(sym_gen_key.__doc__)
-
-        elif cmd == "help(ssh crack)":
-            print(Cracker1.ssh_cracker.__doc__)
+            elif cmd == 'mkdir':
+                Op1 = Ops()
+                Op1.mkdir()
+                
+            elif cmd == 'ls':
+                Op1 = Ops ()
+                Op1.ls()
+                
+            elif cmd == 'rmdir':
+                Op1 = Ops()
+                Op1.rmdir()
+                
+            elif cmd == "meta_info":
+                Op1 = Ops()
+                Op1.meta_info()
                     
-        elif cmd == 'help(cls)':
-            print(Op1.cls.__doc__)
+            elif cmd == "cls":
+                Op1 = Ops()
+                Op1.cls()
+                
+            elif cmd == "file_date":
+                Op1 = Ops()
+                Op1.file_date()
+                
+            elif cmd == "shutdown":
+                Op1 = Ops()
+                Op1.shutdown()
+                
+            elif cmd == "shutdown -a":
+                Op1 = Ops()
+                Op1.shutab()
+                
+            elif cmd == "sys_info":
+                Op1 = Ops()
+                Op1.sys_info()
+
+            elif cmd == "tree":
+                Op1 = Ops()
+                Op1.tre()
             
-        elif cmd == "banner" or cmd == "Banner" or cmd == "BANNER":
-            intro()  
+            elif cmd == "os term":
+                Op1 = Ops()
+                Op1.cmd()
+                    
+            elif cmd == "html_request":
+                web1 = web()
+                web1.html_request()
             
-        elif cmd == "":
-           continue
+            elif cmd == "html_write":
+                web1 = web()
+                web1.html_write()
+                
+            elif cmd == "str_enc":
+                str_enc()
+            
+            elif cmd == "pg":
+                pass_Gen()
+            
+            elif cmd == 'help':
+                help_func()
+                    
+            elif cmd == "dom av":
+               web1 = web()
+               web1.domain()
+            
+            elif cmd == "ip/private":
+                Net1 = Net()
+                Net1.ip_private()
+                
+            elif cmd == "ip/public":
+                Net1 = Net()
+                Net.ip_public()
+                
+            elif cmd == "ip/config":
+                Net1 = Net()
+                Net1.ip_config()
+                
+            elif cmd == "ip/web":
+                Net1 = Net()
+                Net1.web_ip()
+                
+            elif cmd == "ip/track":
+                Net1 = Net()
+                Net1.ip_track()
+                
+            elif cmd =="chat -h":
+                Net1 = Net()
+                Net1.lanc_host()
+                
+            elif cmd == "chat -c":
+                Net1 = Net()
+                Net1.lanc_clt()
+                
+            elif cmd == "http start server":
+                Net1 = Net()
+                Net1.http_server()
+        
+            elif cmd == 'ps scan':
+                Net1 = Net()
+                Net1.ps()
+
+            elif cmd == "file_enc":
+                Enc1 = Encryption()
+                Enc1.enc_file_key()
+                
+            elif cmd == "file_dec":
+                Enc1 = Encryption()
+                Enc1.dec_file_key()
+                
+            elif cmd == "sym key":
+               sym_gen_key()
+            
+            elif cmd == "date":
+                To_date()
+                
+            elif cmd == "time":
+                timer()
+                
+            elif cmd == "fake_name":
+                SoE = SocialEng()
+                SoE.fake_name()
+
+            elif cmd == "exif ext":
+                SoE = SocialEng()
+                SoE.exif()
+                
+            elif cmd == "ssh crack":
+                Cracker1 = Cracker()
+                Cracker1.ssh_cracker()
+
+            elif cmd == "zip crack":
+                Cracker1 = Cracker()
+                Cracker1.zip_cracker()
+
+            elif cmd == "help(exif ext)":
+                print(SoE.exif.__doc__)
+
+            elif cmd == "help(chat -c)":
+                print(Net1.lanc_clt.__doc__)
+                
+            elif cmd == "help(chat -h)":
+                print(Net1.lanc_host.__doc__)
+                
+            elif cmd == 'help(fake_name)':
+                print(SoE.fake_name.__doc__)
+                
+            elif cmd == "help(date)":
+                print(date.__doc__)
+                
+            elif cmd == "help(time)":
+                print(time.__doc__)
+                
+            elif cmd == 'help(md5)':
+                Hash1 = Hashes
+                print(Hash1.md5_str.__doc__)
+                
+            elif cmd == "help(sha256)":
+                Hash1 = Hashes
+                print(Hash1.Sha256_str.__doc__)
+                
+            elif cmd == 'help(sha512)':
+                Hash1 = Hashes
+                print(Hash1.Sha512_str.__doc__)
+                
+            elif cmd == "help(pwd)":
+                Op1 = Ops
+                print(Op1.pwd.__doc__)
+                
+            elif cmd == "help(cd)":
+                Op1 = Ops
+                print(Op1.cd.__doc__)
+                
+            elif cmd == "help(mkdir)":
+                Op1 = Ops()
+                print(Op1.mkdir.__doc__)
+                
+            elif cmd == "help(ls)":
+                Op1 = Ops
+                print(Op1.ls.__doc__)
+                
+            elif cmd == "help(rmdir)":
+                Op1 = Ops
+                print(Op1.rmdir.__doc__)
+                
+            elif cmd == "help(meta_info)":
+                Op1 = Ops
+                print(Op1.meta_info.__doc__)
+                
+            elif cmd == "help(shutdown)":
+                Op1 = Ops
+                print(Op1.shutdown.__doc__)
+                
+            elif cmd == "help(shutdown -a)":
+                Op1 = Ops
+                print(Op1.shutab.__doc__)
+                
+            elif cmd == "help(file_date)":
+                Op1 = Ops
+                print(Op1.file_date.__doc__)
+
+            elif cmd == "help(tree)":
+                Op1 = Ops
+                print(Op1.tre.__doc__)
+                    
+            elif cmd == "help(pg)":
+                print(pass_Gen.__doc__)
+                
+            elif cmd == "help(html_request)":
+                print(web1.html_request.__doc__)
+                
+            elif cmd == "help(html_write)":
+                print(web1.html_write.__doc__)
+                    
+            elif cmd == "help(str enc)":
+                print(str_enc.__doc__)
+                
+            elif cmd == "help(dom av)":
+                print(web1.domain.__doc__)
+                
+            elif cmd == "help(ip/private)":
+                print(Net1.ip_private.__doc__)
+                
+            elif  cmd ==  "help(ip/public)":
+                print(Net1.ip_public.__doc__)
+                
+            elif cmd  == "help(ip/config)":
+                print(Net1.ip_config.__doc__)
+                
+            elif cmd == "help(ip/track)":
+                print(Net1.ip_track.__doc__)
+
+            elif cmd == "help(ps scan)":
+                print(Net1.ps.__doc__)   
                         
-        elif cmd == "exit":
-            print ("Version 2.5")
-            print ("Created by CYBER ELITE NETWORK ™")
-            exit()
-            
-        else:
-            print("Command not recognized. Enter 'help' for the list of the avaliable commands ")
-            continue
+            elif cmd == "help(enc file)":
+                print(Enc1.enc_file_key.__doc__)
+                
+            elif cmd == "help(dec file)":
+                print(Enc1.dec_file_key.__doc__)
+                
+            elif cmd == "help(sym key)":
+                print(sym_gen_key.__doc__)
+
+            elif cmd == "help(ssh crack)":
+                print(Cracker1.ssh_cracker.__doc__)
+                        
+            elif cmd == 'help(cls)':
+                print(Op1.cls.__doc__)
+                
+            elif cmd == "banner" or cmd == "Banner" or cmd == "BANNER":
+                intro()  
+                
+            elif cmd == "":
+               continue
+                            
+            elif cmd == "exit":
+                print ("Version 2.5")
+                print ("Created by CYBER ELITE NETWORK ™")
+                exit()
+                
+            else:
+                print("Command not recognized. Enter 'help' for the list of the avaliable commands ")
+                continue
+
+    except KeyboardInterrupt:
+        pass
 
 #Security Features (Authentication)
-while True:
+def Acct():
+    while True:    
+        cmd2 = input(">>> ").strip()
+        try:
+            if cmd2 == 'l' or cmd2 == "L":
+                Log_usn = input("Enter name:")
+                Log_pass = getpass.getpass(prompt="Enter your password:").strip()
 
+                Log_hash = hashlib.sha256(Log_pass.encode('utf-8')).hexdigest()
+                
+                with open("Log.txt", "r") as f:
+                    # Compare the hashed passwords
+                    if Log_hash != f.read():
+                        print('login error')
+                    else:
+                        print(f"Welcome back commander {Log_usn}")
+                        commands()
+                        
+            elif cmd2 == "c" or cmd2 == "C":
+                Reg_usn = input("Enter name:").strip()
 
-    cmd2 = input(">>> ").strip()
+                Reg_pass = getpass.getpass(prompt='Enter your password: ').strip()
+                        
+                Reg_hash = hashlib.sha256(Reg_pass.encode('utf-8')).hexdigest()
 
-    try:
-        if cmd2 == 'l' or cmd2 == "L":
-            Log_usn = input("Enter name:")
-            Log_pass = getpass.getpass(prompt="Enter your password:").strip()
-
-            Log_hash = hashlib.sha256(Log_pass.encode('utf-8')).hexdigest()
+                with open("Log.txt", "w") as f:
+                    f.write(Reg_hash)
+                    
             
-            with open("Log.txt", "r") as f:
-                # Compare the hashed passwords
-                if Log_hash != f.read():
-                    print('login error')
-                else:
-                    print(f"Welcome back commander {Log_usn}")
-                    commands()
-   
-                    
-        elif cmd2 == "c" or cmd2 == "C":
-            Reg_usn = input("Enter name:").strip()
+            elif cmd2  == "exit":
+                print ("Version 2.5")
+                print ("Created by CYBER ELITE NETWORK")
+                exit()
 
-            Reg_pass = getpass.getpass(prompt='Enter your password: ').strip()
-                    
-            Reg_hash = hashlib.sha256(Reg_pass.encode('utf-8')).hexdigest()
+            else:
+              print("Enter an option")
 
-            with open("Log.txt", "w") as f:
-                f.write(Reg_hash)
-        
-        elif cmd2  == "exit":
-            print ("Version 2.5")
-            print ("Created by CYBER ELITE NETWORK")
-            exit()
+        except FileNotFoundError:
+            print("You must create an account first. Enter C to create an account")
 
-        else:
-         print("Enter an option")
 
-    except FileNotFoundError:
-        print("You must create an account first. Enter C to create an account")
+    # Somethings is wrong with the authetication
+    # Encryption and Decryption
+
+if __name__ == "__main__":
+    intro()
+    Acct()
+    commands()
+    
