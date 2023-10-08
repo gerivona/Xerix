@@ -2,8 +2,7 @@ from cryptography.fernet import Fernet
 import os 
 
 # Read the key from the unlock.key file
-with open('unlock.key', 'rb') as unlock:
-    key = unlock.read()
+key = input("Enter the symmetric key to decrypt your file:")
 
 try:
     f = Fernet(key)

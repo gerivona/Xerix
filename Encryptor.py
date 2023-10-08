@@ -2,13 +2,7 @@ from cryptography.fernet import Fernet
 import os 
 
 key = bytes(input('Enter key:'),'utf-8')
-        #string the key into a file
-with open('unlock.key', 'wb') as unlock:
-           unlock.write(key)
-             
-with open('unlock.key', 'rb') as unlock:
-        key = unlock.read()
-        print(key)
+print(key)
 
 try:
    f = Fernet(key)
