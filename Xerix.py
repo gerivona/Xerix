@@ -63,29 +63,28 @@ class Hashes:
         pass
     
     @exec_time
-    def md5_str(self):
-        '''it takes a string and converts it to a md5 hash'''
-        a_string = input("Enter text to be hashed:")
-        hashed_string = hashlib.md5(b'a_string').hexdigest()
-        print(hashed_string)
-        clip_board = pyperclip.copy(hashed_string)
+    def hash_encryption(self):
+        """ This function takes a string and converts it to different hashes like
+    md5, sha256 and sha512
+        """
         
-    @exec_time  
-    def Sha256_str(self):
-        '''it takes a string and converts it to sha256 hash'''
-        b_string = input("Enter text to be hashed:")
-        hashed_string = hashlib.sha256(b'b_string').hexdigest()
-        print(hashed_string)
-        clip_board = pyperclip.copy(hashed_string)
+        input_hash = input("Enter the hash type (md5, sha256, sha512): ").strip().lower()
+        
+        if input_hash in ["md5", "sha256", "sha512"]:
+            input_text = input("Enter text: ").strip()
+            
+            if input_hash == "md5":
+                hashed_text = hashlib.md5(input_text.encode()).hexdigest()
+            elif input_hash == "sha256":
+                hashed_text = hashlib.sha256(input_text.encode()).hexdigest()
+            elif input_hash == "sha512":
+                hashed_text = hashlib.sha512(input_text.encode()).hexdigest()
 
-    @exec_time    
-    def Sha512_str(self):
-        '''it takes a string and coverts it to sha512 hash'''
-        c_string = input("Enter text to be hashed:")  
-        hashed_string = hashlib.sha512(b'c_string').hexdigest ()
-        print(hashed_string)
-        clip_board = pyperclip.copy(hashed_string)
-      
+            pyperclip.copy(hashed_text)
+            print(hashed_text)
+            
+        else:
+            print("Invalid hash type")
 
 #Encrypting strings 
 @key_interup
@@ -101,9 +100,9 @@ def str_enc():
                 key = bytes(input("Enter key:"),"utf-8")
                 fernet = Fernet(key)
                 Text = input("Enter text:")
-                x = bytes(Text,'utf-8')
-                x = fernet.encrypt(x)
-                print(x)
+                Text_Conv = bytes(Text,'utf-8')
+                Text_Conv = fernet.encrypt(Text_Conv)
+                print(Text_Conv)
                 break
         
             elif text == "decrypt":
@@ -124,7 +123,7 @@ def str_enc():
             print("Please enter a valid key to be able to decrypt the string")
    
 #The class that has operating system commands
-class Ops:
+class Operating_system:
 
     def __init__(self):
         pass
@@ -161,7 +160,7 @@ class Ops:
         var = input("Enter the name of the directory:")
         os.mkdir(var)
         print ("This folder is created in the working directory")
-        print ('folder created successfully')
+        print ('Folder created successfully')
       
     @exec_time
     def ls(self):
@@ -173,7 +172,7 @@ class Ops:
     def tre(self):
         ''' show of the directory and files '''
         os.system('tree')
-        
+            
 
     @exec_time 
     def rmdir (self):
@@ -413,20 +412,22 @@ class Net:
            while True:
                 # receive a message from the client
                 data = client.recv(1024).decode()
+                
+                  # if the client closes the connection, break out of the loop
         
-           # if the client closes the connection, break out of the loop
-           if not data:
-              break
-        
-           print(f"Received message from {address}: {data}")
-        
-           # send a response back to the client
-           response = f"You sent: {data}"
-           client.send(response.encode())
-    
-         # close the connection with the client
-           client.close()
-           print(f"Connection with {address} closed")
+            
+                if not data:
+                    break
+                
+                print(f"Received message from {address}: {data}")
+                
+                # send a response back to the client
+                response = f"You sent: {data}"
+                client.send(response.encode())
+            
+                # close the connection with the client
+                client.close()
+                print(f"Connection with {address} closed")
 
     @exec_time
     def lanc_clt(self):
@@ -495,6 +496,7 @@ class Net:
             with socketserver.TCPServer(("", PORT), Handler) as httpd:
                 print("Server started at port", PORT)
                 httpd.serve_forever()
+                
         except KeyboardInterrupt:
             commands()
 
@@ -581,103 +583,71 @@ class Malware:
     def __init_():
         pass
 
- 
-def help_func():     
-    help = '''
-                            XERIX HELP DOCUMENTATION
-
-        md5_str : This command allows you to hash a string using the md5 hash algorithm.
-        sha256_str : This command allows you to hash a string using the sha256 hash algorithm.
-        sha512_str : This command allows you to hash a string using the sha512 hash algortihm.
-        str_enc : This command has two inner commands.
-                     Encrypt - This allows you to encrypt a string using the ferent algorithm.
-                     Decrypt - This allows you to decrypt an encrypted strings.
-        pwd : This command shows the currrent working directory.
-        cls : This command clears the screen.
-        cd : This command allows you to change the current working directory.
-        shutdown : This command shutsdown the computer.
-        shutdown -a : This command aborts the shutdown order.
-        mkdir : This command is used for creating a new or folder.
-        ls : This command lists all the contents of the current working directory.
-        tree : This command list all the paths and files in a directory.
-        rmdir : This command is used for deleting a folder.
-        meta_info : This command shows the users information about a file in the current working directory.
-        file_date : This command shows the users the last file modification date.
-        sys_info : This command shows the system information.
-        os term : This command allows the users to use the PC terminal.
-
-
-    '''
-    print(help)
-    
-# help section                      
-
+#Help section
+def help_func():
+    with open('Help.txt',  "r") as Help_func:
+        
+        content = Help_func()
+        print(content)
+        
 def commands():
     try:
         while True:
             cmd = input ("X6>>> ").strip()
-            if cmd.startswith('md5_str'):
+            if cmd.startswith('hash'):
                 Hash1 = Hashes()
-                Hash1.md5_str()
-                
-            elif cmd.startswith('sha256_str'):
-                Hash1 = Hashes()
-                Hash1.Sha256_str()
-                
-            elif cmd.startswith("sha512_str"):
-                Hash1 = Hashes()
-                Hash1.Sha512_str()
-                
+                Hash1.hash_encryption()
+    
             elif cmd == 'pwd':
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.pwd()
                 
             elif cmd == 'cd':
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.cd()
                 
             elif cmd == 'mkdir':
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.mkdir()
                 
             elif cmd == 'ls':
-                Op1 = Ops ()
+                Op1 = Operating_system()
                 Op1.ls()
                 
             elif cmd == 'rmdir':
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.rmdir()
                 
             elif cmd == "meta_info":
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.meta_info()
                     
-            elif cmd == "cls":
-                Op1 = Ops()
+            elif cmd == "cls" or cmd == "clear":
+                Op1 = Operating_system()
                 Op1.cls()
                 
             elif cmd == "file_date":
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.file_date()
                 
             elif cmd == "shutdown":
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.shutdown()
                 
             elif cmd == "shutdown -a":
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.shutab()
                 
             elif cmd == "sys_info":
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.sys_info()
 
             elif cmd == "tree":
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.tre()
             
             elif cmd == "os term":
-                Op1 = Ops()
+                Op1 = Operating_system()
                 Op1.cmd()
                     
             elif cmd == "html_request":
@@ -801,43 +771,43 @@ def commands():
                 print(Hash1.Sha512_str.__doc__)
                 
             elif cmd == "help(pwd)":
-                Op1 = Ops
+                Op1 = Operating_system
                 print(Op1.pwd.__doc__)
                 
             elif cmd == "help(cd)":
-                Op1 = Ops
+                Op1 = Operating_system
                 print(Op1.cd.__doc__)
                 
             elif cmd == "help(mkdir)":
-                Op1 = Ops()
+                Op1 = Operating_system
                 print(Op1.mkdir.__doc__)
                 
             elif cmd == "help(ls)":
-                Op1 = Ops
+                Op1 = Operating_system
                 print(Op1.ls.__doc__)
                 
             elif cmd == "help(rmdir)":
-                Op1 = Ops
+                Op1 = Operating_system
                 print(Op1.rmdir.__doc__)
                 
             elif cmd == "help(meta_info)":
-                Op1 = Ops
+                Op1 = Operating_system()
                 print(Op1.meta_info.__doc__)
                 
             elif cmd == "help(shutdown)":
-                Op1 = Ops
+                Op1 = Operating_system
                 print(Op1.shutdown.__doc__)
                 
             elif cmd == "help(shutdown -a)":
-                Op1 = Ops
+                Op1 = Operating_system
                 print(Op1.shutab.__doc__)
                 
             elif cmd == "help(file_date)":
-                Op1 = Ops
+                Op1 = Operating_system
                 print(Op1.file_date.__doc__)
 
             elif cmd == "help(tree)":
-                Op1 = Ops
+                Op1 = Operating_system
                 print(Op1.tre.__doc__)
                     
             elif cmd == "help(pg)":
@@ -892,7 +862,7 @@ def commands():
                continue
                             
             elif cmd == "exit":
-                print ("Version 2.5")
+                print ("Version 1.0.0")
                 print ("Created by CYBER ELITE NETWORK ™")
                 exit()
                 
@@ -934,7 +904,7 @@ def Acct():
                     
             
             elif cmd2  == "exit":
-                print ("Version 2.5")
+                print ("Version 1.0.0")
                 print ("Created by CYBER ELITE NETWORK")
                 exit()
 

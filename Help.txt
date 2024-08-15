@@ -1,0 +1,40 @@
+
+          XERIX HELP DOCUMENTATION
+        
+        hash : This command allows you to convert text to hashes, it allows md5, sha256 and sha512
+        str_enc : This command has two inner commands.
+                     Encrypt - This allsz-;ows you to encrypt a string using the ferent algorithm.
+                     Decrypt - This allows you to decrypt an encrypted strings.
+        pwd : This command shows the currrent working directory.
+        cls : This command clears the screen.
+        cd : This command allows you to change the current working directory.
+        shutdown : This command shutsdown the computer.
+        shutdown -a : This command aborts the shutdown order.
+        mkdir : This command is used for creating a new or folder.
+        ls : This command lists all the contents of the current working directory.
+        tree : This command list all the paths and files in a directory.
+        rmdir : This command is used for deleting a folder.
+        meta_info : This command shows the users information about a file in the current working directory.
+        file_date : This command shows the users the last file modification date.
+        sys_info : This command shows the system information.
+        os_term : This command allows the users to use the PC terminal.
+        html_request : This allows the user to view the html content of a website.
+        html_write : This commands allows the users4 to write html codes in xerix.
+        pg : This commands allows the user to genreate a random password
+        dom av : This commands checks the avaliablity of a domain.
+        ip/private : This commands shows you your private ip address
+        ip/public : This commands shows you your public ip address
+        ip/config : This shows both the public and private ip address
+        chat -h : This commands creates or host a TCP chat system
+        chat -c : This allows the users as a client to join a TCP chat server
+        http start server : This commands allows to host a start a http server
+        ps_scan : This commands scans all the open ports in a network   
+        file_enc : This commands is used to encrypt files
+        file_dec : This commands is used to decrypt
+        sym key : This command is used to generate a 32 bit key used for encryption
+        date : Shows the current date
+        time : Shows the current time
+        fake_name : This commands is used to generates fake names while trying to brute force an attack 
+        exif_ext : Extracts all the exif data or information from a JPEG file
+        ssh_crack : Brute force a ssh tunnel
+        zip_crack : Brute forces a zip file while using a wordlist                                                                                                             

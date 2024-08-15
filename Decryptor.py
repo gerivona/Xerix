@@ -1,23 +1,23 @@
 from cryptography.fernet import Fernet
-import os 
+import os
 
-# Read the key from the unlock.key file
-key = input("Enter the symmetric key to decrypt your file:")
-
-try:
-    f = Fernet(key)
-    # Ask the user for the name of the file to be decrypted
-    x = bytes(input('Enter file to be decrypted:'), 'utf-8')
-    if os.path.isfile(x):
-        with open(x, 'rb') as encrypted_file:
-            encrypted = encrypted_file.read()
-        # Decrypt the file
-        decrypted = f.decrypt(encrypted)
-        with open(x, 'wb') as decrypted_file:
-            decrypted_file.write(decrypted)
+def decrypt_file(key, file_path):
+    try:
+        f = Fernet(key)
+        if os.path.isfile(file_path):
+            with open(file_path, 'rb') as encrypted_file:
+                encrypted = encrypted_file.read()
+            decrypted = f.decrypt(encrypted)
+            backup_file_path = file_path + '.bak'
+            # Create a backup of the original file
+            os.rename(file_path, backup_file_path)
+            with open(file_path, 'wb') as decrypted_file:
+                decrypted_file.write(decrypted)
             print('File decrypted successfully')
-    else:
-        print('Decryption unsuccessful: file not found')
-except ValueError:
-    print('Decryption unsuccessful: invalid key')
+        else:
+            print('Decryption unsuccessful: file not found')
+    except ValueError:
+        print('Decryption unsuccessful: invalid key')
 
+if __name__ == "__main__":
+    key = input("Enter the symmetric key to decrypt your file: ")
